@@ -1,0 +1,509 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DIRECT_DATABASE_URL")
+}
+
+model Business {
+  id                            String   @id
+  name                          String?  @db.LongText
+  description                   String?  @db.LongText
+  mission                       String?  @db.LongText
+  goalShort                     String?  @db.LongText
+  goalMed                       String?  @db.LongText
+  goalLong                      String?  @db.LongText
+  targetMarket                  String?  @db.LongText
+  targetCustomers               String?  @db.LongText
+  competitiveAdvantages         String?  @db.LongText
+  keyProducts                   String?  @db.LongText
+  marketingStrategy             String?  @db.LongText
+  financialProjection           String?  @db.LongText
+  managementTeamQualifications  String?  @db.LongText
+  challenges                    String?  @db.LongText
+  opportunities                 String?  @db.LongText
+  challengesToIndustry          String?  @db.LongText
+  competitorsStrength           String?  @db.LongText
+  competitorsWeakness           String?  @db.LongText
+  differentiationFromCompetitor String?  @db.LongText
+  plansForGrowthOrExpansion     String?  @db.LongText
+  howToMeasureSuccess           String?  @db.LongText
+  keyTrends                     String?  @db.LongText
+  createdAt                     DateTime @default(now())
+  updatedAt                     DateTime
+  userId                        String   @unique
+  product                       String?  @db.LongText
+}
+
+model Campaigns {
+  id           String   @id
+  userId       String
+  description  String?
+  ref_image    Bytes?
+  duration     Int      @default(30)
+  is_completed Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+}
+
+model ChainLinkRaffle {
+  id        String   @id
+  userId    String
+  email     String
+  wallet    String   @unique
+  createdAt DateTime @default(now())
+}
+
+model ChainLinkWinners {
+  id                String   @id
+  userId            String
+  wallet            String
+  weeklyWinnersDate DateTime
+  createdAt         DateTime @default(now())
+  generations       Int      @default(0)
+}
+
+model CollectionMedia {
+  id            String   @id
+  collection_id String
+  media_id      String
+  media_url     String
+  created_at    DateTime @default(now())
+  updated_at    DateTime
+  userId        String
+  name          String
+  count_id      Int
+}
+
+model Collections {
+  id                     String           @id
+  name                   String
+  created_at             DateTime         @default(now())
+  updated_at             DateTime
+  userId                 String
+  description            String?
+  type                   Collections_type
+  count                  Int              @default(0)
+  prompt                 String           @default("")
+  banner_image           String           @default("")
+  banner_image_public_id String?
+}
+
+model Conversations {
+  id        String   @id
+  userId    String
+  title     String   @default("New Conversation")
+  messages  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model CryptoBusiness {
+  id                 String   @id
+  name               String?  @db.LongText
+  purpose            String?  @db.LongText
+  roadmap            String?  @db.LongText
+  team               String?  @db.LongText
+  tokenomics         String?  @db.LongText
+  fundSource         String?  @db.LongText
+  risks              String?  @db.LongText
+  blockchainplatform String?  @db.LongText
+  techSpecifications String?  @db.LongText
+  securityFeatures   String?  @db.LongText
+  targetMarket       String?  @db.LongText
+  marketingStrategy  String?  @db.LongText
+  governance         String?  @db.LongText
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime
+  userId             String   @unique
+}
+
+model Customers {
+  id                 String   @id
+  userId             String   @unique
+  stripeCustomerId   String
+  createdAt          DateTime @default(now())
+  currentPeriodEnd   DateTime @default(now())
+  currentPeriodStart DateTime @default(now())
+}
+
+model Documents {
+  id          String   @id
+  title       String
+  content     String
+  uploader_id String
+  campaign_id String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model Financials {
+  id                             String  @id
+  userId                         String  @unique
+  revenueStreams                 String? @db.LongText
+  expenses                       String? @db.LongText
+  expenseCategories              String? @db.LongText
+  accountingPeriod               String? @db.LongText
+  trackingRevenueExpenses        String? @db.LongText
+  assets                         String? @db.LongText
+  liabilities                    String? @db.LongText
+  equity                         String? @db.LongText
+  assetLiabilityValuation        String? @db.LongText
+  reportingDate                  String? @db.LongText
+  budgetNextPeriod               String? @db.LongText
+  financialBenchmarks            String? @db.LongText
+  accountingSoftwareUsed         String? @db.LongText
+  financialReportingRequirements String? @db.LongText
+}
+
+model Images {
+  id               String   @id
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime
+  bytes            Int
+  format           String
+  height           Int
+  nsfw             Boolean  @default(false)
+  originalFilename String
+  prompt           String?  @db.MediumText
+  public           Boolean  @default(true)
+  publicId         String
+  resourceType     String
+  secureUrl        String
+  url              String
+  userId           String
+  width            Int
+}
+
+model MetadataAttributes {
+  id                String @id
+  metadata_media_id String
+  key               String
+  value             String
+  orderKey          String @unique
+}
+
+model MetadataMedia {
+  id                  String  @id
+  userId              String
+  collection_media_id String  @unique
+  name                String
+  description         String
+  author              String
+  media_url           String
+  customMetadata      Json?
+  isCustom            Boolean @default(false)
+}
+
+model Music {
+  id         String   @id
+  userId     String
+  title      String
+  url        String
+  secure_url String
+  createdAt  DateTime @default(now())
+  genres     Json?
+  themes     Json?
+  moods      Json?
+  origin     String   @default("partner")
+  prompt     String   @default("")
+}
+
+model ReferenceImages {
+  id            String   @id
+  userId        String
+  type          String
+  url           String
+  secure_url    String
+  description   String
+  created_at    DateTime @default(now())
+  updated_at    DateTime
+  public_id     String
+  resource_type String
+}
+
+model SmartContracts {
+  id          String                @id
+  userId      String
+  contract    String                @db.LongText
+  name        String
+  is_deployed Boolean               @default(false)
+  status      SmartContracts_status @default(CREATED)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @default(now())
+}
+
+model TextToSpeech {
+  id           String   @id
+  userId       String
+  url          String
+  secureUrl    String
+  playbackUrl  String
+  publicId     String
+  format       String
+  resourceType String
+  duration     Float
+  bytes        Int
+  createdAt    DateTime @default(now())
+}
+
+model UploadedImages {
+  id           String   @id
+  userId       String
+  url          String
+  secureUrl    String
+  width        Int
+  height       Int
+  format       String
+  resourceType String
+  bytes        Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  publicId     String
+}
+
+model UploadedMusic {
+  id           String   @id
+  userId       String
+  url          String
+  secureUrl    String
+  playbackUrl  String
+  publicId     String
+  format       String
+  resourceType String
+  duration     Float
+  bytes        Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+}
+
+model UploadedVideo {
+  id           String   @id
+  userId       String
+  url          String
+  secureUrl    String
+  playbackUrl  String
+  publicId     String
+  format       String
+  resourceType String
+  duration     Float
+  bytes        Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+}
+
+model UserApiLimit {
+  id        String   @id
+  userId    String   @unique
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model UserProfile {
+  id                String  @id
+  userId            String  @unique
+  email             String
+  countryCode       String
+  businessTelephone String
+  walletAddress     String
+  youtube           String?
+  twitter           String?
+  instagram         String?
+  discord           String?
+  github            String?
+  businessName      String
+  address           String  @default("")
+}
+
+model UserSubscription {
+  id                        String    @id
+  userId                    String    @unique
+  stripe_customer_id        String?   @unique
+  stripe_subscription_id    String?   @unique
+  stripe_price_id           String?
+  stripe_current_period_end DateTime?
+}
+
+model Users {
+  id                  String     @id
+  userId              String     @unique
+  firstName           String
+  lastName            String
+  conversationCredits Int        @default(0)
+  imageCredits        Int        @default(0)
+  musicCredits        Int        @default(0)
+  collectionCredits   Int        @default(0)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime
+  freeCredits         Int        @default(10)
+  role                Users_role @default(FREE)
+  ttsCredits          Int        @default(0)
+  videoCredits        Int        @default(0)
+  billingAddress      Json?
+  paymentMethod       Json?
+}
+
+model Videos {
+  id          String   @id
+  title       String
+  description String?
+  link        String
+  upload_date DateTime @default(now())
+  uploader_id String
+  campaign_id String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model Wallets {
+  id        String   @id
+  userId    String
+  wallet    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model WhitelistRequests {
+  id             String @id
+  userId         String @unique
+  email          String
+  wallet_address String
+}
+
+model Predictions {
+  id           String            @id @default(cuid())
+  status       Prediction_status @default(INQUEUE)
+  output       String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  input        Json
+  error        String?
+  modelVersion String
+}
+
+model JoinCommunity {
+  id        String   @id
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model CollectionOrder {
+  id           String @id @default(cuid())
+  userId       String
+  collectionId String
+  prompt       String
+  count        Int
+  refImage     String
+  modelVersion String
+}
+
+model CollectionImages {
+  id               String       @id @default(cuid())
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  bytes            Int
+  format           String
+  height           Int
+  nsfw             Boolean      @default(false)
+  originalFilename String
+  prompt           String?      @db.MediumText
+  public           Boolean      @default(true)
+  publicId         String
+  resourceType     String
+  secureUrl        String
+  url              String
+  userId           String
+  width            Int
+  models           BirbleModels
+}
+
+model TempGenerations {
+  id        String                @id
+  userId    String
+  model     TempGenerations_model
+  publicId  String
+  url       String
+  secureUrl String
+  width     Int
+  height    Int
+  prompt    String                @db.MediumText
+  createdAt DateTime              @default(now())
+  updatedAt DateTime
+}
+
+enum BirbleModels {
+  SHEFA_TURBO
+  DREAMSHAPER_XL_TURBO
+  KANDINSKY
+  PLAYGROUND
+  SDXL
+  SDXL_LIGHTNING
+  INSTANT_ID
+  PHOTOMAKER
+  REALISTIC_VISION_IMPAINTING
+  STABLE_DIFFUSION_IMPAINTING
+  FACE_SWAP
+  LLAVA_13B
+  MUSICGEN
+  STYLETTS
+  TORTOISE_TTS
+  CHAMP
+  ZERO_SCOPE
+  ANIMATE_DIFF
+  MUSTANGO
+  SONGSTARTER
+}
+
+enum SmartContracts_status {
+  CREATED
+  DEPLOYED
+  PENDING
+  IN_PROGRESS
+  CANCELLED
+}
+
+enum Collections_type {
+  IMAGE
+  MUSIC
+  VIDEO
+}
+
+enum Users_role {
+  FREE
+  PRO
+  PREMIUM
+}
+
+enum Prediction_status {
+  INQUEUE
+  STARTING
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+enum TempGenerations_model {
+  SHEFA_TURBO
+  DREAMSHAPER_XL_TURBO
+  KANDINSKY
+  PLAYGROUND
+  SDXL
+  SDXL_LIGHTNING
+  INSTANT_ID
+  PHOTOMAKER
+  REALISTIC_VISION_IMPAINTING
+  STABLE_DIFFUSION_IMPAINTING
+  FACE_SWAP
+  LLAVA_13B
+  MUSICGEN
+  STYLETTS
+  TORTOISE_TTS
+  CHAMP
+  ZERO_SCOPE
+  ANIMATE_DIFF
+  MUSTANGO
+  SONGSTARTER
+}
