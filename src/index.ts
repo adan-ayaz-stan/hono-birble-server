@@ -23,19 +23,12 @@ import { createChampOrder } from './routes/order/video/champ';
 import { createZeroscopeOrder } from './routes/order/video/zeroscope';
 import { predictionStatus } from './routes/status/prediction';
 import { receiveOrder } from './webhooks/order/receive';
-// type Variables = {
-// 	isServiceRunning: boolean;
-// };
+
 const app = new Hono();
 
 app.use(logger());
-// app.use(async (c, next) => {
-// 	await getRawBody(c.req.json(), {
-// 		encoding: true,
-// 	});
-// 	await next();
-// });
-// (global as any).isServiceRunning = true;
+
+// JAYYYYY HINDDDDDDDDD
 
 //image routes
 app.route('/order/os/image', createShefaOrder);
