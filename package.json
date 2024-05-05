@@ -5,6 +5,7 @@
   "dependencies": {
     "@hono/node-server": "^1.11.0",
     "@prisma/client": "^5.12.1",
+    "cloudinary": "^2.2.0",
     "hono": "^4.2.5",
     "raw-body": "^2.5.2",
     "replicate": "^0.29.1",

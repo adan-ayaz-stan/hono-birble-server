@@ -1,12 +1,12 @@
 import { Prisma } from "@prisma/client";
-import { getErrorMessage } from "../../lib/utils";
-import { models } from "./../../constants/models";
-import prisma from "../../lib/db/prisma";
-import { replicate } from "../../lib/generator/replicate";
+import { getErrorMessage } from "../../../lib/utils";
+import { models } from "../../../constants/models";
+import prisma from "../../../lib/db/prisma";
+import { replicate } from "../../../lib/generator/replicate";
 
-export default async function shefaOrderQueue() {
+export default async function invokeCollectionImageOrderQueue() {
   // Check if the service is running
-  if ((global as any).isShefaRunning) {
+  if ((global as any).isCollectionImageRunning) {
     console.log("The background generation operation is already running.");
     return;
   }
@@ -16,12 +16,12 @@ export default async function shefaOrderQueue() {
   console.log("///////////////////////////////");
   console.log("Spinning up the background generation operation...");
   console.log("///////////////////////////////");
-  (global as any).isShefaRunning = true;
+  (global as any).isCollectionImageRunning = true;
 
   const processOrders = async () => {
     try {
       // Fetch the orders
-      const orders = await prisma.predictions.findMany({
+      const orders = await prisma.collectionPredictions.findMany({
         where: {
           status: "INQUEUE",
         },
@@ -36,7 +36,7 @@ export default async function shefaOrderQueue() {
         console.log("Finished the background generation operation. length 0");
         console.log("///////////////////////////////");
         console.log("///////////////////////////////");
-        (global as any).isShefaRunning = false;
+        (global as any).isCollectionImageRunning = false;
         return;
       }
 
@@ -49,7 +49,7 @@ export default async function shefaOrderQueue() {
 
         if (!isExistingModel) {
           // on Error
-          await prisma.predictions.update({
+          await prisma.collectionPredictions.update({
             where: {
               id: order.id,
             },
@@ -67,16 +67,21 @@ export default async function shefaOrderQueue() {
           }
           return json;
         }
+
+        const orderData = parseJsonValue(order.input);
+
         await replicate.predictions.create({
           version: order.modelVersion,
-          input: parseJsonValue(order.input),
+          input: orderData,
           webhook:
-            "https://f108-154-192-194-78.ngrok-free.app/order/receive/" +
+            "https://556b-34-118-255-242.ngrok-free.app/collection/receive/" +
+            order.collectionId +
+            "/" +
             order.id,
           webhook_events_filter: ["start", "completed", "output"],
         });
 
-        await prisma.predictions.update({
+        await prisma.collectionPredictions.update({
           where: {
             id: order.id,
           },
@@ -103,7 +108,7 @@ export default async function shefaOrderQueue() {
       console.log("Finished the background generation operation.");
       console.log("///////////////////////////////");
       console.log("///////////////////////////////");
-      (global as any).isShefaRunning = false;
+      (global as any).isCollectionImageRunning = false;
       return;
     }
   };
